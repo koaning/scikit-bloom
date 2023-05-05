@@ -1,10 +1,12 @@
+import itertools as it 
+
+import mmh3
 import numpy as np
-from scipy.sparse import csr_matrix, dok_array
+from scipy.sparse import lil_matrix
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import HashingVectorizer
 from skpartial.pipeline import make_partial_union
 
-import mmh3
 
 
 class BloomVectorizer(BaseEstimator, TransformerMixin):
@@ -20,13 +22,15 @@ class BloomVectorizer(BaseEstimator, TransformerMixin):
         return self 
 
     def transform(self, X, y=None):
-        row, col = [], []
-        for i, x in enumerate(X):
+        x_orig, x_new = it.tee(X)
+        size = sum(1 for x in x_orig)
+        res = lil_matrix((size, self.n_buckets), dtype=np.int8)
+        for i, x in enumerate(x_new):
             for w in x.lower().split(" ") if self.lowercase else x.split(" "):
                 for _ in range(self.n_hash):
-                    row.append(i)
-                    col.append(mmh3.hash(f"{_}-{w}", signed=False) % self.n_buckets)
-        return csr_matrix((np.ones(len(row)), (row, col)), dtype=np.int8)
+                    col = mmh3.hash(f"{_}-{w}", signed=False) % self.n_buckets
+                    res[i, col] = 1
+        return res
 
 
 class BloomishVectorizer(BaseEstimator, TransformerMixin):

@@ -11,3 +11,11 @@ def test_n_hash(vectorizer, n_hash, n_buckets):
     for x in X:
         assert x.shape[1] >= n_buckets
         assert x.sum() == n_hash
+
+
+@pytest.mark.parametrize("vectorizer", [BloomVectorizer, BloomishVectorizer])
+def test_can_handle_generator(vectorizer):
+    texts = (f"text-{i}" for i in range(10))
+    X = vectorizer().transform(texts)
+    assert X.shape[0] == 10
+    assert X.sum() == 30
