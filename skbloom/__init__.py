@@ -52,6 +52,8 @@ class BloomishVectorizer(BaseEstimator, TransformerMixin):
         self.n_buckets = n_buckets
         self.n_hash = n_hash
         self.lowercase = lowercase
+        self.ngram_range = ngram_range
+        self.analyzer = analyzer
         self.pipes = make_partial_union(*[
             HashingVectorizer(n_features=n_buckets//n_hash + i, ngram_range=ngram_range, analyzer=analyzer, binary=True) for i in range(n_hash)
         ])

@@ -13,6 +13,11 @@ def test_n_hash(vectorizer, n_hash, n_buckets):
         assert x.sum() == n_hash
 
 
+@pytest.mark.parametrize("vectorizer", [BloomVectorizer, BloomishVectorizer])
+def test_print(vectorizer, n_hash, n_buckets):
+    texts = ["hello", "word", "thing"]
+    print(vectorizer())
+
 @pytest.mark.parametrize("vectorizer", [BloomVectorizer])
 def test_can_handle_generator(vectorizer):
     texts = (f"text-{i}" for i in range(10))
