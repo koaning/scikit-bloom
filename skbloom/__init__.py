@@ -10,6 +10,13 @@ from skpartial.pipeline import make_partial_union
 
 
 class BloomVectorizer(BaseEstimator, TransformerMixin):
+    """
+    BloomVectorizer. Will hash each word in text multiple times using mmh3. 
+
+    The benefit of this method is that it can accept generators in the `.transform()` method. 
+    The downside is that it is a fair bit slower. There is also a larger chance of a hash 
+    collision but the output embedding should also be somewhat more efficiently used.
+    """
     def __init__(self, n_buckets=2000, n_hash=3, lowercase=True) -> None:
         self.n_buckets = n_buckets
         self.n_hash = n_hash
@@ -34,11 +41,18 @@ class BloomVectorizer(BaseEstimator, TransformerMixin):
 
 
 class BloomishVectorizer(BaseEstimator, TransformerMixin):
-    def __init__(self, n_buckets=2000, n_hash=3, lowercase=True, ngram_range=(1, 1), analyzer="word") -> None:
+    """
+    BloomishVectorizer. Will hash each word in text multiple times by re-using the HashingVectorizer from sklearn. 
+
+    The downside of this method is that it cannot accept generators in the `.transform()` method. 
+    It is however a fair bit faster, typically 5x. The output is going to be more sparse than the
+    BloomVectorizer because we simple concatenate the HashingVectorizers.
+    """
+    def __init__(self, n_buckets=6000, n_hash=3, lowercase=True, ngram_range=(1, 1), analyzer="word") -> None:
         self.n_buckets = n_buckets
         self.n_hash = n_hash
         self.lowercase = lowercase
-        self.pipe = make_partial_union(*[
+        self.pipes = make_partial_union(*[
             HashingVectorizer(n_features=n_buckets//n_hash + i, ngram_range=ngram_range, analyzer=analyzer, binary=True) for i in range(n_hash)
         ])
     
@@ -49,4 +63,4 @@ class BloomishVectorizer(BaseEstimator, TransformerMixin):
         return self 
 
     def transform(self, X, y=None):
-        return self.pipe.transform(X)
+        return self.pipes.transform(X)
