@@ -2,11 +2,11 @@ import itertools as it
 
 import mmh3
 import numpy as np
-from scipy.sparse import lil_matrix
+from scipy.sparse import lil_matrix, coo_matrix, csr_array
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import HashingVectorizer
 from skpartial.pipeline import make_partial_union
-
+from sklearn.utils import murmurhash3_32
 
 
 class BloomVectorizer(BaseEstimator, TransformerMixin):
@@ -17,10 +17,10 @@ class BloomVectorizer(BaseEstimator, TransformerMixin):
     The downside is that it is a fair bit slower. There is also a larger chance of a hash 
     collision but the output embedding should also be somewhat more efficiently used.
     """
-    def __init__(self, n_buckets=2000, n_hash=3, lowercase=True) -> None:
+    def __init__(self, n_buckets=6000, n_hash=3) -> None:
         self.n_buckets = n_buckets
         self.n_hash = n_hash
-        self.lowercase = lowercase
+        self.vectorizer = HashingVectorizer()
     
     def fit(self, X, y=None):
         return self 
@@ -29,15 +29,12 @@ class BloomVectorizer(BaseEstimator, TransformerMixin):
         return self 
 
     def transform(self, X, y=None):
-        x_orig, x_new = it.tee(X)
-        size = sum(1 for x in x_orig)
-        res = lil_matrix((size, self.n_buckets), dtype=np.int8)
-        for i, x in enumerate(x_new):
-            for w in x.lower().split(" ") if self.lowercase else x.split(" "):
-                for _ in range(self.n_hash):
-                    col = mmh3.hash(f"{_}-{w}", signed=False) % self.n_buckets
-                    res[i, col] = 1
-        return res
+        X_tfm = self.vectorizer.transform(X)
+        coo_mat = coo_matrix(X_tfm)
+        row_ind = np.concatenate([coo_mat.row for i in range(self.n_hash)])
+        col_ind = np.concatenate([coo_mat.col % (self.n_buckets - 1) for i in range(self.n_hash)])
+        ones = np.ones(row_ind.shape)
+        return csr_array((ones, (row_ind, col_ind)), shape=(len(X), self.n_buckets))
 
 
 class BloomishVectorizer(BaseEstimator, TransformerMixin):
