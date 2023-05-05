@@ -3,9 +3,11 @@ from skbloom import BloomVectorizer, BloomishVectorizer
 
 
 @pytest.mark.parametrize("vectorizer", [BloomVectorizer, BloomishVectorizer])
-def test_n_hash(vectorizer):
+@pytest.mark.parametrize("n_hash", [1, 2, 3])
+@pytest.mark.parametrize("n_buckets", [1000, 2000, 6000])
+def test_n_hash(vectorizer, n_hash, n_buckets):
     texts = ["hello", "word", "thing"]
-    X = vectorizer().fit_transform(texts)
+    X = vectorizer(n_hash=n_hash, n_buckets=n_buckets).fit_transform(texts)
     for x in X:
-        print(x)
-        assert x.sum() == 3
+        assert x.shape[1] >= n_buckets
+        assert x.sum() == n_hash
