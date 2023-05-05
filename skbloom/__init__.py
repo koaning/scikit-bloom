@@ -1,12 +1,14 @@
 import numpy as np
 from scipy.sparse import csr_matrix, dok_array
 from sklearn.base import BaseEstimator, TransformerMixin
-from skpartial.pipeline import make_partial_union
 from sklearn.feature_extraction.text import HashingVectorizer
+from skpartial.pipeline import make_partial_union
+
+import mmh3
 
 
 class BloomVectorizer(BaseEstimator, TransformerMixin):
-    def __init__(self, n_buckets=5000, n_hash=3, lowercase=True) -> None:
+    def __init__(self, n_buckets=2000, n_hash=3, lowercase=True) -> None:
         self.n_buckets = n_buckets
         self.n_hash = n_hash
         self.lowercase = lowercase
@@ -23,9 +25,8 @@ class BloomVectorizer(BaseEstimator, TransformerMixin):
             for w in x.lower().split(" ") if self.lowercase else x.split(" "):
                 for _ in range(self.n_hash):
                     row.append(i)
-                    col.append(hash(f"{_}-{w}") % self.n_buckets)
+                    col.append(mmh3.hash(f"{_}-{w}") % self.n_buckets)
         return csr_matrix((np.ones(len(row)), (row, col)), dtype=np.int8)
-
 
 
 class BloomishVectorizer(BaseEstimator, TransformerMixin):

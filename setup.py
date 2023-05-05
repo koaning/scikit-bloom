@@ -2,7 +2,7 @@ import pathlib
 from setuptools import setup, find_packages
 
 
-base_packages = ["scikit-learn>=1.0.0", "scikit-partial>=0.1.0"]
+base_packages = ["scikit-learn>=1.0.0", "scikit-partial>=0.1.0", "mmh3"]
 
 test_packages = [
     "interrogate>=1.5.0",
