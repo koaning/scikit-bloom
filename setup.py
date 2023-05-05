@@ -2,7 +2,7 @@ import pathlib
 from setuptools import setup, find_packages
 
 
-base_packages = ["scikit-learn>=1.0.0"]
+base_packages = ["scikit-learn>=1.0.0", "scikit-partial>=0.1.0"]
 
 test_packages = [
     "interrogate>=1.5.0",
@@ -19,7 +19,7 @@ dev_packages = all_packages + test_packages
 
 setup(
     name="scikit-bloom",
-    version="0.1.0",
+    version="0.1.1",
     author="Vincent D. Warmerdam",
     packages=find_packages(exclude=["notebooks", "docs"]),
     description="Bloom tricks for text pipelines in scikit-learn.",
