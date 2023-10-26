@@ -1,3 +1,4 @@
+import hashlib
 import numpy as np
 from scipy.sparse import csr_matrix, dok_array
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -21,9 +22,11 @@ class BloomVectorizer(BaseEstimator, TransformerMixin):
         row, col = [], []
         for i, x in enumerate(X):
             for w in x.lower().split(" ") if self.lowercase else x.split(" "):
-                for _ in range(self.n_hash):
+                for n_hash in range(self.n_hash):
                     row.append(i)
-                    col.append(hash(f"{_}-{w}") % self.n_buckets)
+                    h = hashlib.md5(f"{w}{n_hash}".encode())
+                    idx = int(h.hexdigest(), 16)
+                    col.append(idx % self.n_buckets)
         return csr_matrix((np.ones(len(row)), (row, col)), dtype=np.int8)
 
 
@@ -44,4 +47,4 @@ class BloomishVectorizer(BaseEstimator, TransformerMixin):
         return self 
 
     def transform(self, X, y=None):
-        return self.pipe.transform(X, y)
+        return self.pipe.transform(X)
