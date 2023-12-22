@@ -1,12 +1,12 @@
+import time
+from datasets import load_dataset
+from skbloom import BloomVectorizer, BloomishVectorizer, SlowBloomVectorizer
+from sklearn.feature_extraction.text import HashingVectorizer
 from skbloom.skbloom import hash_to_cols
 
 print(hash_to_cols("haha this is great", n_hashes=3, n_buckets=40))
 
 
-import time
-from datasets import load_dataset
-from skbloom import BloomVectorizer, BloomishVectorizer, SlowBloomVectorizer
-from sklearn.feature_extraction.text import HashingVectorizer
 
 dataset = load_dataset("clinc_oos", "plus")
 texts = dataset['train']['text'] * 10
