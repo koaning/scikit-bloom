@@ -2,6 +2,8 @@
 
 # Scikit-Bloom 
 
+> An excuse to play with Rust, but also a neat trick for sklearn!
+
 This package contains some bloom tricks for text pipelines in scikit-learn. To learn more about this trick, check out [this blogpost](https://explosion.ai/blog/bloom-embeddings).
 
 You can install it via:
