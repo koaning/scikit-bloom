@@ -115,3 +115,10 @@ python -m pip install maturin
 maturin develop
 python -m pip install -e .
 ```
+
+If you want to make a release, remember to tag before pushing. 
+
+```
+git tag v0.2.1
+git push origin <branchname>
+```
