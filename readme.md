@@ -61,7 +61,11 @@ In this benchmark we're creating a
 | SlowBloomVectorizer | 5.259      | A pure python implementation
 | HashingVectorizer   | 0.695      | Using sklearn's hashing vectorizer to only hash once
 
-You can also choose to run the `BloomVectorizer` by just hashing once and it seems to be competative with the `HashingVectorizer`. 
+Note that the `HashingVectorizer` is faster here because it only hashes each word once. The other implementations hash it three times. 
+
+### An extra benchmark 
+
+Just as an extra, you can also choose to run the `BloomVectorizer` by just hashing once and when I do that ... it seems to be competative with the `HashingVectorizer`. 
 
 <details>
     <summary>Show me the code</summary>
