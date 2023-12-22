@@ -96,7 +96,7 @@ for feats in [3000, 5000, 10000, 20000, 100_000]:
 
 
 I want to be careful with suggesting that the `BloomVectorizer` is always faster 
-because the `HashingVectorizer` comes with way more features. You can build n-gram representations, just to mention one example, which the `BloomVectorizer` does not do. But it does seem like it is at least competative, which is neat.
+because the `HashingVectorizer` comes with way more features. You can build n-gram representations, just to mention one example, which the `BloomVectorizer` does not do. But it does seem like we're in the same ballpark, which is neat consider the implementation was very little effort.
 
 ## Important 
 
