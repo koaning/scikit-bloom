@@ -25,7 +25,7 @@ class BloomVectorizer(BaseEstimator, TransformerMixin):
             row_ids = [i for _ in col_ids]
             row.extend(row_ids)
             col.extend(col_ids)
-        return csr_matrix((np.ones(len(row)), (row, col)), dtype=np.int8)
+        return csr_matrix((np.ones(len(row)), (row, col)), dtype=np.int8, shape=(len(X), self.n_features))
 
 
 class SlowBloomVectorizer(BaseEstimator, TransformerMixin):
@@ -49,7 +49,7 @@ class SlowBloomVectorizer(BaseEstimator, TransformerMixin):
                     h = hashlib.md5(f"{w}{n_hash}".encode())
                     idx = int(h.hexdigest(), 16)
                     col.append(idx % self.n_features)
-        return csr_matrix((np.ones(len(row)), (row, col)), dtype=np.int8)
+        return csr_matrix((np.ones(len(row)), (row, col)), dtype=np.int8, shape=(len(X), self.n_features))
 
 
 
