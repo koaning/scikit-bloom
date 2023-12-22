@@ -13,13 +13,13 @@ python -m pip install scikit-bloom
 And you can import the components via: 
 
 ```python
-from skbloom import BloomVectorizer, BloomishVectorizer
+from skbloom import BloomVectorizer, BloomishVectorizer, SlowBloomVectorizer
 
 BloomVectorizer().fit(X).transform(X)
 BloomishVectorizer().fit(X).transform(X)
 ```
 
-The `BloomVectorizer` will use rust under the hood for the hashing to construct the bloom representation. The `BloomishVectorizer` will just run the [HashingVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.HashingVectorizer.html) from scikit-learn multiple times in sequence. 
+The `BloomVectorizer` will use rust under the hood for the hashing to construct the bloom representation. The `BloomishVectorizer` will just run the [HashingVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.HashingVectorizer.html) from scikit-learn multiple times in sequence. The `SlowBloomVectorizer` is pretty much the same as the `BloomVectizer` in terms of features, but is implemented in Python.
 
 ## Benchmarks 
 
