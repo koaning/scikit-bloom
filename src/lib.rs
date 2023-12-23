@@ -1,11 +1,11 @@
 use pyo3::prelude::*;
 use std::hash::{Hasher, Hash};
 // use std::collections::hash_map::DefaultHasher;
-use fasthash::XXHasher;
+use fasthash::SeaHasher;
 
 fn string_to_hash_mod(input: &str, size: &u32) -> u32 {
     // let mut hasher = DefaultHasher::new();
-    let mut hasher: XXHasher = Default::default();
+    let mut hasher: SeaHasher = Default::default();
     input.hash(&mut hasher);
     let hash = hasher.finish();
     hash as u32 % size
