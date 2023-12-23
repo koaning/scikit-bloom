@@ -1,14 +1,15 @@
 use pyo3::prelude::*;
 use std::hash::{Hasher, Hash};
-// use std::collections::hash_map::DefaultHasher;
 use fasthash::SeaHasher;
 
-fn string_to_hash_mod(input: &str, size: &u32) -> u32 {
-    // let mut hasher = DefaultHasher::new();
+
+fn hash_with_reuse(t: &str, n_buckets: u32, n_hashes: u32) -> Vec<u32> {
     let mut hasher: SeaHasher = Default::default();
-    input.hash(&mut hasher);
-    let hash = hasher.finish();
-    hash as u32 % size
+    (0..n_hashes).map(|_s| {
+        t.hash(&mut hasher);
+        let value = hasher.finish();
+        value as u32 % n_buckets
+    }).collect()
 }
 
 
@@ -18,10 +19,7 @@ fn hash_to_cols(input: &str, n_hashes: u32, n_buckets: u32) -> PyResult<Vec<u32>
     .to_lowercase()
     .split_whitespace()
     .flat_map(|ex| {
-        (0..n_hashes).map(move |h| {
-            let combined_str = format!("{}{}", ex, h);
-            string_to_hash_mod(&combined_str, &n_buckets)
-        })
+        hash_with_reuse(ex, n_buckets, n_hashes)
     })
     .collect();
 
