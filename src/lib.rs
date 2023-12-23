@@ -1,10 +1,10 @@
 use pyo3::prelude::*;
 use std::hash::{Hasher, Hash};
-use fasthash::SeaHasher;
+use fasthash::MurmurHasher;
 
 
 fn hash_with_reuse(t: &str, n_buckets: u32, n_hashes: u32) -> Vec<u32> {
-    let mut hasher: SeaHasher = Default::default();
+    let mut hasher: MurmurHasher = Default::default();
     (0..n_hashes).map(|_s| {
         t.hash(&mut hasher);
         let value = hasher.finish();
