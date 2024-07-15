@@ -1,6 +1,6 @@
 <img src="icon.svg" width="125" height="125" align="right" />
 
-# Scikit-Bloom 
+### Scikit-Bloom 
 
 > An excuse to play with Rust, but also a neat trick for sklearn!
 
