@@ -106,7 +106,7 @@ because the `HashingVectorizer` comes with way more features. You can build n-gr
 
 In fairness, while this trick is interesting ... you _might_ be fine just using the `HashingVectorizer` that just comes with sklearn. This project works, but it was also an excuse for me to try out rust.
 
-It's a nice motivating example for me to learn rust, partially because it's a tangible example from a field that I am familiar with. But it's also been a relatively low investment to rewrite an expensive bit of code in rust. 
+It's a nice motivating example for me to learn a bit of rust, partially because it's a tangible example from a field that I am familiar with. But it's also been a relatively low investment to rewrite an expensive bit of code. 
 
 ## Development
 
