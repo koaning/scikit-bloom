@@ -115,9 +115,12 @@ These are mainly some notes for myself.
 To install all of this locally; 
 
 ```
-python -m pip install maturin 
-maturin develop
-python -m pip install -e .
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+python -m pip install uv
+uv venv --python 3.12
+uv pip install maturin
+uv run maturin develop --uv
+uv pip install -e .
 ```
 
 If you want to make a release, remember to tag before pushing. 

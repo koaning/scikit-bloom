@@ -11,15 +11,16 @@ print(hash_to_cols("haha this is great", n_hashes=3, n_buckets=40))
 dataset = load_dataset("clinc_oos", "plus")
 texts = dataset['train']['text'] * 10
 
-# trials = [BloomVectorizer(n_features=10_000), 
-#           BloomishVectorizer(n_features=10_000), 
-#           SlowBloomVectorizer(n_features=10_000), 
-#           HashingVectorizer(n_features=10_000)]
-# for trial in trials:
-#     tic = time.time()
-#     trial.fit_transform(texts)
-#     toc = time.time()
-#     print(f"{trial.__class__.__name__}: {toc - tic}")
+print("Original benchmark")
+trials = [BloomVectorizer(n_features=10_000), 
+          BloomishVectorizer(n_features=10_000), 
+          SlowBloomVectorizer(n_features=10_000), 
+          HashingVectorizer(n_features=10_000)]
+for trial in trials:
+    tic = time.time()
+    trial.fit_transform(texts)
+    toc = time.time()
+    print(f"{trial.__class__.__name__}: {toc - tic}")
 
 
 print("Comparing to the standard sklearn implementation")

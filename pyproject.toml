@@ -5,7 +5,7 @@ build-backend = "maturin"
 [project]
 name = "scikit-bloom"
 version = "0.2.1"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
@@ -13,9 +13,11 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-  'scikit-learn >= 1.0.0',
+  'scikit-learn >= 1.5.0',
   'scikit-partial >= 0.1.0',
+  'numpy > 2'
 ]
+
 [tool.maturin]
 features = ["pyo3/extension-module"]
 python-source = "python"
