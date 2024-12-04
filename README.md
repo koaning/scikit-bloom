@@ -126,7 +126,7 @@ uv pip install -e .
 If you want to make a release, remember to tag before pushing. 
 
 ```
-git tag v0.2.1
+git tag v0.2.3
 git push origin <branchname>
 git push origin --tags
 ```

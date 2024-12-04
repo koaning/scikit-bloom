@@ -1,6 +1,6 @@
 import time
 from datasets import load_dataset
-from skbloom import BloomVectorizer, BloomishVectorizer, SlowBloomVectorizer
+from skbloom import BloomVectorizer, BloomishVectorizer, SlowBloomVectorizer, SplitHashBloomVectorizer
 from sklearn.feature_extraction.text import HashingVectorizer
 from skbloom.skbloom import hash_to_cols
 
@@ -15,7 +15,8 @@ print("Original benchmark")
 trials = [BloomVectorizer(n_features=10_000), 
           BloomishVectorizer(n_features=10_000), 
           SlowBloomVectorizer(n_features=10_000), 
-          HashingVectorizer(n_features=10_000)]
+          HashingVectorizer(n_features=10_000), 
+          SplitHashBloomVectorizer(n_features=10_000)]
 for trial in trials:
     tic = time.time()
     trial.fit_transform(texts)
@@ -23,11 +24,11 @@ for trial in trials:
     print(f"{trial.__class__.__name__}: {toc - tic}")
 
 
-print("Comparing to the standard sklearn implementation")
-for feats in [3000, 5000, 10000, 20000, 100_000, 200_000, 1_000_000]:
-    trials = [BloomVectorizer(n_hash=1, n_features=feats), HashingVectorizer(n_features=feats)]
-    for trial in trials:
-        tic = time.time()
-        trial.fit_transform(texts)
-        toc = time.time()
-        print(f"{feats}: {trial.__class__.__name__}: {toc - tic}")
+# print("Comparing to the standard sklearn implementation")
+# for feats in [3000, 5000, 10000, 20000, 100_000, 200_000, 1_000_000]:
+#     trials = [BloomVectorizer(n_hash=1, n_features=feats), HashingVectorizer(n_features=feats), SplitHashBloomVectorizer(n_hash=1, n_features=feats)]
+#     for trial in trials:
+#         tic = time.time()
+#         trial.fit_transform(texts)
+#         toc = time.time()
+#         print(f"{feats}: {trial.__class__.__name__}: {toc - tic}")
